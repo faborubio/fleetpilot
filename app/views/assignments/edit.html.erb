@@ -1,0 +1,11 @@
+<% content_for :title, "Edit assignment — FleetPilot" %>
+
+<div class="mb-6 flex items-center justify-between">
+  <h1 class="text-2xl font-bold">Edit assignment</h1>
+  <% if policy(@assignment).destroy? %>
+    <%= button_to "Remove assignment", @assignment, method: :delete,
+          data: { turbo_confirm: "Remove this assignment?" },
+          class: "rounded-md border border-red-200 px-4 py-2 text-sm text-red-700 hover:bg-red-50 cursor-pointer" %>
+  <% end %>
+</div>
+<%= render "form", assignment: @assignment %>

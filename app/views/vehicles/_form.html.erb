@@ -1,0 +1,63 @@
+<%= form_with model: vehicle, class: "max-w-xl space-y-4" do |form| %>
+  <%= render "shared/form_errors", record: vehicle %>
+
+  <div>
+    <%= form.label :vin, "VIN", class: "block text-sm font-medium" %>
+    <%= form.text_field :vin, required: true, maxlength: Vehicle::VIN_LENGTH,
+          class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2 font-mono uppercase" %>
+    <p class="mt-1 text-xs text-slate-500">Make, model and year are filled in automatically from the VIN — leave them blank unless you want to override.</p>
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+    <div>
+      <%= form.label :make, class: "block text-sm font-medium" %>
+      <%= form.text_field :make, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+    </div>
+    <div>
+      <%= form.label :model, class: "block text-sm font-medium" %>
+      <%= form.text_field :model, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+    </div>
+    <div>
+      <%= form.label :year, class: "block text-sm font-medium" %>
+      <%= form.number_field :year, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+    <div>
+      <%= form.label :license_plate, class: "block text-sm font-medium" %>
+      <%= form.text_field :license_plate, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2 uppercase" %>
+    </div>
+    <div>
+      <%= form.label :status, class: "block text-sm font-medium" %>
+      <%= form.select :status, Vehicle.statuses.keys.map { |s| [ s.humanize, s ] },
+            {}, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+    </div>
+    <div>
+      <%= form.label :fuel_type, class: "block text-sm font-medium" %>
+      <%= form.select :fuel_type, Vehicle.fuel_types.keys.map { |f| [ f.humanize, f ] },
+            { include_blank: "Unknown" }, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+    <div>
+      <%= form.label :odometer, "Odometer (mi)", class: "block text-sm font-medium" %>
+      <%= form.number_field :odometer, min: 0, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+    </div>
+    <div>
+      <%= form.label :purchased_on, class: "block text-sm font-medium" %>
+      <%= form.date_field :purchased_on, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+    </div>
+    <div>
+      <%= form.label :purchase_price_cents, "Purchase price (cents)", class: "block text-sm font-medium" %>
+      <%= form.number_field :purchase_price_cents, min: 0, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+    </div>
+  </div>
+
+  <div class="flex gap-3">
+    <%= form.submit class: "rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 cursor-pointer" %>
+    <%= link_to "Cancel", vehicle.persisted? ? vehicle_path(vehicle) : vehicles_path,
+          class: "rounded-md border border-slate-300 px-4 py-2 text-sm hover:bg-slate-100" %>
+  </div>
+<% end %>

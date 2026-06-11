@@ -1,0 +1,41 @@
+<%= form_with model: driver, class: "max-w-xl space-y-4" do |form| %>
+  <%= render "shared/form_errors", record: driver %>
+
+  <div>
+    <%= form.label :name, class: "block text-sm font-medium" %>
+    <%= form.text_field :name, required: true, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div>
+      <%= form.label :email, class: "block text-sm font-medium" %>
+      <%= form.email_field :email, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+    </div>
+    <div>
+      <%= form.label :phone, class: "block text-sm font-medium" %>
+      <%= form.telephone_field :phone, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+    <div>
+      <%= form.label :license_number, class: "block text-sm font-medium" %>
+      <%= form.text_field :license_number, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+    </div>
+    <div>
+      <%= form.label :license_expires_on, "License expires", class: "block text-sm font-medium" %>
+      <%= form.date_field :license_expires_on, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+    </div>
+    <div>
+      <%= form.label :status, class: "block text-sm font-medium" %>
+      <%= form.select :status, Driver.statuses.keys.map { |s| [ s.humanize, s ] },
+            {}, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+    </div>
+  </div>
+
+  <div class="flex gap-3">
+    <%= form.submit class: "rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 cursor-pointer" %>
+    <%= link_to "Cancel", driver.persisted? ? driver_path(driver) : drivers_path,
+          class: "rounded-md border border-slate-300 px-4 py-2 text-sm hover:bg-slate-100" %>
+  </div>
+<% end %>

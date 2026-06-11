@@ -1,0 +1,32 @@
+<%= form_with model: assignment, class: "max-w-xl space-y-4" do |form| %>
+  <%= render "shared/form_errors", record: assignment %>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div>
+      <%= form.label :vehicle_id, "Vehicle", class: "block text-sm font-medium" %>
+      <%= form.collection_select :vehicle_id, current_account.vehicles.order(:make, :model), :id, :display_name,
+            { include_blank: "Select a vehicle" }, { required: true, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" } %>
+    </div>
+    <div>
+      <%= form.label :driver_id, "Driver", class: "block text-sm font-medium" %>
+      <%= form.collection_select :driver_id, current_account.drivers.active.order(:name), :id, :name,
+            { include_blank: "Select a driver" }, { required: true, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" } %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div>
+      <%= form.label :started_on, "From", class: "block text-sm font-medium" %>
+      <%= form.date_field :started_on, required: true, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+    </div>
+    <div>
+      <%= form.label :ended_on, "To (blank while current)", class: "block text-sm font-medium" %>
+      <%= form.date_field :ended_on, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+    </div>
+  </div>
+
+  <div class="flex gap-3">
+    <%= form.submit class: "rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 cursor-pointer" %>
+    <%= link_to "Cancel", :back, class: "rounded-md border border-slate-300 px-4 py-2 text-sm hover:bg-slate-100" %>
+  </div>
+<% end %>

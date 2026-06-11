@@ -57,7 +57,7 @@ that keeps it from happening again.
 🚧 In active development. Roadmap:
 
 - [x] Phase 0 — Foundations: tooling, test suite, CI, security scanning
-- [ ] Phase 1 — Fleet core: accounts, auth, vehicles (VIN decoding), drivers, assignments
+- [x] Phase 1 — Fleet core: accounts, auth, vehicles (VIN decoding), drivers, assignments
 - [ ] Phase 2 — Maintenance: service records, schedules, renewals, alert engine
 - [ ] Phase 3 — Integrations: Twilio SMS, SendGrid email, Stripe subscriptions
 - [ ] Phase 4 — Reports: cost dashboards, fuel tracking, demo seeds
