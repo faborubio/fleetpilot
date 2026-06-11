@@ -46,6 +46,12 @@ bin/brakeman --no-pager    # static security analysis
 bin/bundler-audit          # known CVEs in dependencies
 ```
 
+## Engineering log
+
+Every failure we hit and fix becomes a documented prevention rule in
+[docs/POSTMORTEMS.md](docs/POSTMORTEMS.md) — symptom, root cause, fix and the rule
+that keeps it from happening again.
+
 ## Status
 
 🚧 In active development. Roadmap:
