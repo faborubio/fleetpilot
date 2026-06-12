@@ -1,0 +1,14 @@
+<% content_for :title, "Alerts — FleetPilot" %>
+
+<h1 class="mb-6 text-2xl font-bold">Alerts</h1>
+
+<% if @alerts.any? %>
+  <ul id="alerts" class="space-y-2">
+    <%= render @alerts %>
+  </ul>
+<% else %>
+  <div class="rounded-lg border border-dashed border-slate-300 bg-white p-12 text-center text-slate-500">
+    <p class="font-medium">You're all caught up</p>
+    <p class="mt-1 text-sm">No expiring documents, due maintenance or license issues right now.</p>
+  </div>
+<% end %>

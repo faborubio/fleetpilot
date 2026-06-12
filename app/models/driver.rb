@@ -1,8 +1,11 @@
 class Driver < ApplicationRecord
+  DUE_SOON_DAYS = 30
+
   include AccountScoped
 
   has_many :assignments, dependent: :destroy
   has_many :vehicles, through: :assignments
+  has_many :alerts, as: :alertable, dependent: :destroy
 
   enum :status, { active: 0, inactive: 1 }, default: :active
 

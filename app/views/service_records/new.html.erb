@@ -1,0 +1,40 @@
+<% content_for :title, "Add service record — FleetPilot" %>
+
+<h1 class="mb-6 text-2xl font-bold">Add service record — <%= @vehicle.display_name %></h1>
+
+<%= form_with model: [ @vehicle, @service_record ], class: "max-w-xl space-y-4" do |form| %>
+  <%= render "shared/form_errors", record: @service_record %>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div>
+      <%= form.label :category, class: "block text-sm font-medium" %>
+      <%= form.select :category, ServiceRecord.categories.keys.map { |c| [ c.humanize, c ] },
+            {}, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+    </div>
+    <div>
+      <%= form.label :performed_on, class: "block text-sm font-medium" %>
+      <%= form.date_field :performed_on, required: true, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+    </div>
+    <div>
+      <%= form.label :odometer, "Odometer (mi)", class: "block text-sm font-medium" %>
+      <%= form.number_field :odometer, min: 0, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+    </div>
+    <div>
+      <%= form.label :cost_cents, "Cost (cents)", class: "block text-sm font-medium" %>
+      <%= form.number_field :cost_cents, min: 0, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+    </div>
+  </div>
+  <div>
+    <%= form.label :vendor, class: "block text-sm font-medium" %>
+    <%= form.text_field :vendor, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+  </div>
+  <div>
+    <%= form.label :notes, class: "block text-sm font-medium" %>
+    <%= form.text_area :notes, rows: 3, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+  </div>
+
+  <div class="flex gap-3">
+    <%= form.submit "Save", class: "rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 cursor-pointer" %>
+    <%= link_to "Cancel", @vehicle, class: "rounded-md border border-slate-300 px-4 py-2 text-sm hover:bg-slate-100" %>
+  </div>
+<% end %>

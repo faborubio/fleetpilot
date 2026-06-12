@@ -1,0 +1,5 @@
+<% content_for :title, "Add maintenance schedule — FleetPilot" %>
+
+<h1 class="mb-6 text-2xl font-bold">Add maintenance schedule — <%= @vehicle.display_name %></h1>
+<%= render "form", maintenance_schedule: @maintenance_schedule,
+      url: vehicle_maintenance_schedules_path(@vehicle), cancel_path: @vehicle %>

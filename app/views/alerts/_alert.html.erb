@@ -1,0 +1,13 @@
+<% color = { "critical" => "border-red-200 bg-red-50", "warning" => "border-amber-200 bg-amber-50", "info" => "border-slate-200 bg-white" }[alert.severity] %>
+<li id="<%= dom_id(alert) %>" class="flex items-center justify-between rounded-lg border p-4 <%= color %>">
+  <div class="flex items-center gap-3">
+    <span class="rounded-full px-2 py-0.5 text-xs font-semibold uppercase <%= { 'critical' => 'bg-red-600 text-white', 'warning' => 'bg-amber-500 text-white', 'info' => 'bg-slate-500 text-white' }[alert.severity] %>">
+      <%= alert.severity %>
+    </span>
+    <span class="text-sm text-slate-900"><%= alert.message %></span>
+  </div>
+  <% if policy(alert).destroy? %>
+    <%= button_to "Dismiss", alert_path(alert), method: :delete,
+          class: "rounded-md border border-slate-300 bg-white px-3 py-1 text-xs hover:bg-slate-100 cursor-pointer" %>
+  <% end %>
+</li>

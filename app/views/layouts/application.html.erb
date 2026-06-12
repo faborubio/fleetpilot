@@ -27,6 +27,9 @@
           <%= link_to "FleetPilot", root_path, class: "text-lg font-bold tracking-tight" %>
           <%= link_to "Vehicles", vehicles_path, class: nav_link_class(vehicles_path) %>
           <%= link_to "Drivers", drivers_path, class: nav_link_class(drivers_path) %>
+          <%= link_to alerts_path, class: nav_link_class(alerts_path) do %>
+            Alerts <%= render "alerts/badge", count: current_account.alerts.active.count %>
+          <% end %>
           <div class="ms-auto flex items-center gap-4 text-sm">
             <span class="hidden text-slate-300 sm:inline"><%= current_account.name %></span>
             <%= button_to "Sign out", session_path, method: :delete,

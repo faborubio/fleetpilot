@@ -1,0 +1,24 @@
+<%= form_with model: renewal, url: url, class: "max-w-xl space-y-4" do |form| %>
+  <%= render "shared/form_errors", record: renewal %>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div>
+      <%= form.label :kind, class: "block text-sm font-medium" %>
+      <%= form.select :kind, Renewal.kinds.keys.map { |k| [ k.humanize, k ] },
+            {}, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+    </div>
+    <div>
+      <%= form.label :expires_on, class: "block text-sm font-medium" %>
+      <%= form.date_field :expires_on, required: true, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+    </div>
+  </div>
+  <div>
+    <%= form.label :notes, class: "block text-sm font-medium" %>
+    <%= form.text_field :notes, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+  </div>
+
+  <div class="flex gap-3">
+    <%= form.submit "Save", class: "rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 cursor-pointer" %>
+    <%= link_to "Cancel", cancel_path, class: "rounded-md border border-slate-300 px-4 py-2 text-sm hover:bg-slate-100" %>
+  </div>
+<% end %>

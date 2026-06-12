@@ -1,0 +1,33 @@
+<div class="rounded-lg border border-slate-200 bg-white p-5">
+  <div class="mb-4 flex items-center justify-between">
+    <h2 class="text-sm font-semibold uppercase text-slate-500">Renewals</h2>
+    <% if policy(Renewal).create? %>
+      <%= link_to "Add renewal", new_vehicle_renewal_path(vehicle),
+            class: "rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-700" %>
+    <% end %>
+  </div>
+
+  <% if renewals.any? %>
+    <ul class="divide-y divide-slate-100 text-sm">
+      <% renewals.each do |renewal| %>
+        <li class="flex items-center justify-between py-2">
+          <span class="font-medium"><%= renewal.kind.humanize %></span>
+          <span class="flex items-center gap-2">
+            <% if renewal.expired? %>
+              <span class="rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-800">Expired <%= renewal.expires_on.to_fs(:long) %></span>
+            <% elsif renewal.due_soon? %>
+              <span class="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">Due <%= renewal.expires_on.to_fs(:long) %></span>
+            <% else %>
+              <span class="text-slate-500"><%= renewal.expires_on.to_fs(:long) %></span>
+            <% end %>
+            <% if policy(renewal).update? %>
+              <%= link_to "Edit", edit_renewal_path(renewal), class: "text-slate-400 underline hover:text-slate-900" %>
+            <% end %>
+          </span>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="text-sm text-slate-500">No renewals tracked. Add insurance, registration or inspection dates.</p>
+  <% end %>
+</div>

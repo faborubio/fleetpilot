@@ -1,0 +1,4 @@
+<%= turbo_stream.remove dom_id(@alert) if @alert %>
+<%= turbo_stream.replace "alerts_badge" do %>
+  <%= render "alerts/badge", count: current_account.alerts.active.count %>
+<% end %>

@@ -70,3 +70,10 @@
     <% end %>
   </div>
 </div>
+
+<div class="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+  <%= render "vehicles/renewals", vehicle: @vehicle, renewals: @renewals %>
+  <%= render "vehicles/maintenance_schedules", vehicle: @vehicle, schedules: @maintenance_schedules %>
+</div>
+
+<%= render "vehicles/service_records", vehicle: @vehicle, service_records: @service_records %>
