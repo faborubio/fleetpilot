@@ -1,0 +1,64 @@
+<% content_for :title, "Vehicles — FleetPilot" %>
+
+<div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+  <h1 class="text-2xl font-bold">Vehicles</h1>
+  <% if policy(Vehicle).create? %>
+    <%= link_to "Add vehicle", new_vehicle_path,
+          class: "rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700" %>
+  <% end %>
+</div>
+
+<%= form_with url: vehicles_path, method: :get, data: { controller: "autosubmit" },
+      class: "mb-6 flex flex-wrap items-end gap-3" do |form| %>
+  <div class="grow sm:max-w-xs">
+    <%= form.label :q, "Search", class: "block text-xs font-medium text-slate-500" %>
+    <%= form.search_field :q, value: params[:q], placeholder: "VIN, make, model or plate",
+          data: { action: "input->autosubmit#submit" },
+          class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm" %>
+  </div>
+  <div>
+    <%= form.label :status, class: "block text-xs font-medium text-slate-500" %>
+    <%= form.select :status,
+          options_for_select(Vehicle.statuses.keys.map { |s| [ s.humanize, s ] }, params[:status]),
+          { include_blank: "All statuses" },
+          data: { action: "change->autosubmit#submit" },
+          class: "mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm" %>
+  </div>
+<% end %>
+
+<% if @vehicles.any? %>
+  <div class="overflow-x-auto rounded-lg border border-slate-200 bg-white">
+    <table class="w-full text-left text-sm">
+      <thead class="border-b border-slate-200 bg-slate-100 text-xs uppercase text-slate-500">
+        <tr>
+          <th class="px-4 py-3">Vehicle</th>
+          <th class="px-4 py-3">VIN</th>
+          <th class="px-4 py-3">Plate</th>
+          <th class="px-4 py-3">Status</th>
+          <th class="px-4 py-3 text-right">Odometer</th>
+          <th class="px-4 py-3">Driver</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100">
+        <% @vehicles.each do |vehicle| %>
+          <tr class="hover:bg-slate-50">
+            <td class="px-4 py-3 font-medium">
+              <%= link_to vehicle.display_name, vehicle, class: "hover:underline" %>
+            </td>
+            <td class="px-4 py-3 font-mono text-xs"><%= vehicle.vin %></td>
+            <td class="px-4 py-3"><%= vehicle.license_plate %></td>
+            <td class="px-4 py-3"><%= render "status_badge", vehicle: vehicle %></td>
+            <td class="px-4 py-3 text-right tabular-nums"><%= number_with_delimiter(vehicle.odometer) %> mi</td>
+            <td class="px-4 py-3"><%= vehicle.current_driver&.name || "—" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <div class="mt-4"><%== @pagy.series_nav if @pagy.pages > 1 %></div>
+<% else %>
+  <div class="rounded-lg border border-dashed border-slate-300 bg-white p-12 text-center text-slate-500">
+    <p class="font-medium">No vehicles found</p>
+    <p class="mt-1 text-sm">Add your first vehicle to start tracking your fleet.</p>
+  </div>
+<% end %>

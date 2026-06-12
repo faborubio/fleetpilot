@@ -1,0 +1,72 @@
+<% content_for :title, "#{@vehicle.display_name} — FleetPilot" %>
+
+<div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+  <div>
+    <h1 class="text-2xl font-bold"><%= @vehicle.display_name %></h1>
+    <p class="mt-1 font-mono text-sm text-slate-500">VIN <%= @vehicle.vin %></p>
+  </div>
+  <div class="flex gap-2">
+    <% if policy(@vehicle).update? %>
+      <%= link_to "Edit", edit_vehicle_path(@vehicle),
+            class: "rounded-md border border-slate-300 px-4 py-2 text-sm hover:bg-slate-100" %>
+    <% end %>
+    <% if policy(@vehicle).destroy? %>
+      <%= button_to "Delete", @vehicle, method: :delete,
+            data: { turbo_confirm: "Remove this vehicle and its history?" },
+            class: "rounded-md border border-red-200 px-4 py-2 text-sm text-red-700 hover:bg-red-50 cursor-pointer" %>
+    <% end %>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+  <div class="rounded-lg border border-slate-200 bg-white p-5">
+    <h2 class="mb-4 text-sm font-semibold uppercase text-slate-500">Details</h2>
+    <dl class="space-y-3 text-sm">
+      <div class="flex justify-between"><dt class="text-slate-500">Status</dt><dd><%= render "status_badge", vehicle: @vehicle %></dd></div>
+      <div class="flex justify-between"><dt class="text-slate-500">License plate</dt><dd class="font-medium"><%= @vehicle.license_plate || "—" %></dd></div>
+      <div class="flex justify-between"><dt class="text-slate-500">Odometer</dt><dd class="font-medium tabular-nums"><%= number_with_delimiter(@vehicle.odometer) %> mi</dd></div>
+      <div class="flex justify-between"><dt class="text-slate-500">Fuel</dt><dd class="font-medium"><%= @vehicle.fuel_type&.humanize || "—" %></dd></div>
+      <div class="flex justify-between"><dt class="text-slate-500">Purchased</dt><dd class="font-medium"><%= @vehicle.purchased_on&.to_fs(:long) || "—" %></dd></div>
+      <div class="flex justify-between"><dt class="text-slate-500">Purchase price</dt><dd class="font-medium"><%= money(@vehicle.purchase_price_cents) %></dd></div>
+    </dl>
+  </div>
+
+  <div class="rounded-lg border border-slate-200 bg-white p-5 lg:col-span-2">
+    <div class="mb-4 flex items-center justify-between">
+      <h2 class="text-sm font-semibold uppercase text-slate-500">Assignment history</h2>
+      <% if policy(Assignment).create? %>
+        <%= link_to "Assign driver", new_assignment_path(vehicle_id: @vehicle.id),
+              class: "rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-700" %>
+      <% end %>
+    </div>
+
+    <% if @assignments.any? %>
+      <table class="w-full text-left text-sm">
+        <thead class="text-xs uppercase text-slate-500">
+          <tr>
+            <th class="py-2">Driver</th>
+            <th class="py-2">From</th>
+            <th class="py-2">To</th>
+            <th class="py-2"></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          <% @assignments.each do |assignment| %>
+            <tr>
+              <td class="py-2 font-medium"><%= link_to assignment.driver.name, assignment.driver, class: "hover:underline" %></td>
+              <td class="py-2"><%= assignment.started_on.to_fs(:long) %></td>
+              <td class="py-2"><%= assignment.ended_on&.to_fs(:long) || content_tag(:span, "Current", class: "rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800") %></td>
+              <td class="py-2 text-right">
+                <% if policy(assignment).update? %>
+                  <%= link_to "Edit", edit_assignment_path(assignment), class: "text-slate-500 underline hover:text-slate-900" %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p class="text-sm text-slate-500">No drivers have been assigned to this vehicle yet.</p>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,8 @@
+<% classes = {
+  "active" => "bg-green-100 text-green-800",
+  "in_shop" => "bg-amber-100 text-amber-800",
+  "retired" => "bg-slate-200 text-slate-600"
+}[vehicle.status] %>
+<span class="inline-block rounded-full px-2.5 py-0.5 text-xs font-medium <%= classes %>">
+  <%= vehicle.status.humanize %>
+</span>
