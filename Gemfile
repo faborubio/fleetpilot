@@ -85,6 +85,9 @@ group :development do
 
   # Docker-based deployment [https://kamal-deploy.org]
   gem "kamal", require: false
+
+  # Process manager for bin/dev (web + Tailwind watcher) [https://github.com/ddollar/foreman]
+  gem "foreman", require: false
 end
 
 group :test do

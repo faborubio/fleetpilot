@@ -16,6 +16,13 @@ Template:
 
 ---
 
+## 2026-06-11 — `bin/dev` fails with `foreman: not found`
+
+- **Symptom:** `bin/dev` tried to `gem install foreman`, which landed in `~/.local/share/gem/.../bin` (not on PATH) and failed to rehash rbenv shims, then `exec foreman` failed with `foreman: not found`.
+- **Root cause:** the stock `bin/dev` installs foreman as a global gem, but rbenv is root-owned (gems install to a user dir outside PATH) and foreman isn't in the bundle.
+- **Fix:** added `foreman` to the Gemfile `development` group and changed `bin/dev` to `exec bundle exec foreman start -f Procfile.dev`.
+- **Prevention rule:** on this machine, dev tools that scripts expect on PATH (foreman, etc.) must live in the Gemfile and be invoked via `bundle exec`, never `gem install`. Same root cause as the vendored-gems entry below.
+
 ## 2026-06-11 — git push rejected for workflow files (missing OAuth scope)
 
 - **Symptom:** `git push` rejected with `refusing to allow an OAuth App to create or update workflow .github/workflows/ci.yml without workflow scope`.
