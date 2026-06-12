@@ -1,0 +1,40 @@
+<div class="rounded-lg border border-slate-200 bg-white p-5">
+  <div class="mb-4 flex items-center justify-between">
+    <h2 class="text-sm font-semibold uppercase text-slate-500">Maintenance schedules</h2>
+    <% if policy(MaintenanceSchedule).create? %>
+      <%= link_to "Add schedule", new_vehicle_maintenance_schedule_path(vehicle),
+            class: "rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-700" %>
+    <% end %>
+  </div>
+
+  <% if schedules.any? %>
+    <ul class="divide-y divide-slate-100 text-sm">
+      <% schedules.each do |schedule| %>
+        <li class="flex items-center justify-between py-2">
+          <span>
+            <span class="font-medium"><%= schedule.category.humanize %></span>
+            <span class="text-xs text-slate-400">
+              every <%= [ schedule.interval_months && "#{schedule.interval_months} mo", schedule.interval_miles && "#{number_with_delimiter(schedule.interval_miles)} mi" ].compact.join(" / ") %>
+            </span>
+          </span>
+          <span class="flex items-center gap-2">
+            <% if schedule.due? %>
+              <span class="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">Due now</span>
+            <% elsif schedule.due_soon? %>
+              <span class="rounded-full bg-yellow-50 px-2 py-0.5 text-xs font-medium text-yellow-700">Due soon</span>
+            <% elsif schedule.next_due_on %>
+              <span class="text-slate-500">Next <%= schedule.next_due_on.to_fs(:long) %></span>
+            <% else %>
+              <span class="text-slate-400">No service logged yet</span>
+            <% end %>
+            <% if policy(schedule).update? %>
+              <%= link_to "Edit", edit_maintenance_schedule_path(schedule), class: "text-slate-400 underline hover:text-slate-900" %>
+            <% end %>
+          </span>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="text-sm text-slate-500">No schedules. Add recurring maintenance like oil changes or inspections.</p>
+  <% end %>
+</div>

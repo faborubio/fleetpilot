@@ -64,5 +64,45 @@ if account.assignments.none?
   end
 end
 
-puts "Seeded: #{Account.count} accounts, #{Vehicle.count} vehicles, #{Driver.count} drivers, #{Assignment.count} assignments"
+if account.renewals.none?
+  account.vehicles.find_each do |vehicle|
+    Renewal.kinds.each_key do |kind|
+      # Mix of valid, expiring-soon and expired dates so the alert engine has work to do.
+      expires = [ rand(60..300).days.from_now, rand(1..25).days.from_now, rand(1..40).days.ago ].sample.to_date
+      vehicle.renewals.create!(account:, kind:, expires_on: expires)
+    end
+  end
+end
+
+if account.maintenance_schedules.none?
+  account.vehicles.find_each do |vehicle|
+    vehicle.maintenance_schedules.create!(
+      account:, category: :oil_change, interval_months: 6, interval_miles: 5_000,
+      last_performed_on: rand(2..8).months.ago.to_date,
+      last_performed_odometer: [ vehicle.odometer - rand(1_000..6_000), 0 ].max
+    )
+  end
+end
+
+if account.service_records.none?
+  account.vehicles.find_each do |vehicle|
+    rand(1..4).times do
+      vehicle.service_records.create!(
+        account:,
+        category: ServiceRecord.categories.keys.sample,
+        performed_on: Faker::Date.between(from: 1.year.ago, to: Date.current),
+        odometer: rand(5_000..vehicle.odometer.clamp(5_000, 200_000)),
+        cost_cents: rand(50..900) * 100,
+        vendor: [ "Quick Lube", "City Tire", "Dealership", "Joe's Garage" ].sample
+      )
+    end
+  end
+end
+
+# Generate the first round of alerts so the demo dashboard isn't empty.
+Alerts::Scanner.call(account)
+
+puts "Seeded: #{Account.count} accounts, #{Vehicle.count} vehicles, #{Driver.count} drivers, " \
+     "#{Assignment.count} assignments, #{Renewal.count} renewals, #{ServiceRecord.count} service records, " \
+     "#{Alert.active.count} open alerts"
 puts "Sign in as #{admin.email_address} / password123"

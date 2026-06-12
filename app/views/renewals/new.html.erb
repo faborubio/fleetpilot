@@ -1,0 +1,4 @@
+<% content_for :title, "Add renewal — FleetPilot" %>
+
+<h1 class="mb-6 text-2xl font-bold">Add renewal — <%= @vehicle.display_name %></h1>
+<%= render "form", renewal: @renewal, url: vehicle_renewals_path(@vehicle), cancel_path: @vehicle %>

@@ -1,0 +1,37 @@
+<%= form_with model: maintenance_schedule, url: url, class: "max-w-xl space-y-4" do |form| %>
+  <%= render "shared/form_errors", record: maintenance_schedule %>
+
+  <div>
+    <%= form.label :category, class: "block text-sm font-medium" %>
+    <%= form.select :category, MaintenanceSchedule.categories.keys.map { |c| [ c.humanize, c ] },
+          {}, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div>
+      <%= form.label :interval_months, "Every (months)", class: "block text-sm font-medium" %>
+      <%= form.number_field :interval_months, min: 1, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+    </div>
+    <div>
+      <%= form.label :interval_miles, "Every (miles)", class: "block text-sm font-medium" %>
+      <%= form.number_field :interval_miles, min: 1, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+    </div>
+  </div>
+  <p class="text-xs text-slate-500">Set at least one interval. Whichever comes first triggers the next service.</p>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div>
+      <%= form.label :last_performed_on, "Last done on", class: "block text-sm font-medium" %>
+      <%= form.date_field :last_performed_on, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+    </div>
+    <div>
+      <%= form.label :last_performed_odometer, "Last done at (mi)", class: "block text-sm font-medium" %>
+      <%= form.number_field :last_performed_odometer, min: 0, class: "mt-1 w-full rounded-md border border-slate-300 px-3 py-2" %>
+    </div>
+  </div>
+
+  <div class="flex gap-3">
+    <%= form.submit "Save", class: "rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 cursor-pointer" %>
+    <%= link_to "Cancel", cancel_path, class: "rounded-md border border-slate-300 px-4 py-2 text-sm hover:bg-slate-100" %>
+  </div>
+<% end %>

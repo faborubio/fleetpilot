@@ -5,6 +5,10 @@ class Vehicle < ApplicationRecord
 
   has_many :assignments, dependent: :destroy
   has_many :drivers, through: :assignments
+  has_many :service_records, dependent: :destroy
+  has_many :maintenance_schedules, dependent: :destroy
+  has_many :renewals, dependent: :destroy
+  has_many :alerts, as: :alertable, dependent: :destroy
 
   enum :status, { active: 0, in_shop: 1, retired: 2 }, default: :active
   enum :fuel_type, { gasoline: 0, diesel: 1, hybrid: 2, electric: 3, other: 4 }, prefix: true

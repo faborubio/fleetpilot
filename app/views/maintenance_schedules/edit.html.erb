@@ -1,0 +1,5 @@
+<% content_for :title, "Edit maintenance schedule — FleetPilot" %>
+
+<h1 class="mb-6 text-2xl font-bold">Edit maintenance schedule — <%= @maintenance_schedule.vehicle.display_name %></h1>
+<%= render "form", maintenance_schedule: @maintenance_schedule,
+      url: maintenance_schedule_path(@maintenance_schedule), cancel_path: @maintenance_schedule.vehicle %>

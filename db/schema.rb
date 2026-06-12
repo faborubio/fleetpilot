@@ -10,11 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_11_225655) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_12_031732) do
   create_table "accounts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "alerts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "alertable_id", null: false
+    t.string "alertable_type", null: false
+    t.integer "category", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.date "due_on"
+    t.string "message", null: false
+    t.integer "severity", default: 0, null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "status"], name: "index_alerts_on_account_id_and_status"
+    t.index ["account_id"], name: "index_alerts_on_account_id"
+    t.index ["alertable_type", "alertable_id", "category"], name: "index_alerts_on_source_and_category"
+    t.index ["alertable_type", "alertable_id"], name: "index_alerts_on_alertable"
   end
 
   create_table "assignments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -46,6 +63,51 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_11_225655) do
     t.index ["account_id"], name: "index_drivers_on_account_id"
   end
 
+  create_table "maintenance_schedules", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.integer "category", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.integer "interval_miles"
+    t.integer "interval_months"
+    t.integer "last_performed_odometer"
+    t.date "last_performed_on"
+    t.datetime "updated_at", null: false
+    t.bigint "vehicle_id", null: false
+    t.index ["account_id"], name: "index_maintenance_schedules_on_account_id"
+    t.index ["vehicle_id", "category"], name: "index_maintenance_schedules_on_vehicle_id_and_category", unique: true
+    t.index ["vehicle_id"], name: "index_maintenance_schedules_on_vehicle_id"
+  end
+
+  create_table "renewals", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.datetime "created_at", null: false
+    t.date "expires_on", null: false
+    t.integer "kind", default: 0, null: false
+    t.string "notes"
+    t.datetime "updated_at", null: false
+    t.bigint "vehicle_id", null: false
+    t.index ["account_id"], name: "index_renewals_on_account_id"
+    t.index ["expires_on"], name: "index_renewals_on_expires_on"
+    t.index ["vehicle_id", "kind"], name: "index_renewals_on_vehicle_id_and_kind", unique: true
+    t.index ["vehicle_id"], name: "index_renewals_on_vehicle_id"
+  end
+
+  create_table "service_records", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.integer "category", default: 0, null: false
+    t.integer "cost_cents"
+    t.datetime "created_at", null: false
+    t.text "notes"
+    t.integer "odometer"
+    t.date "performed_on", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "vehicle_id", null: false
+    t.string "vendor"
+    t.index ["account_id"], name: "index_service_records_on_account_id"
+    t.index ["vehicle_id", "performed_on"], name: "index_service_records_on_vehicle_id_and_performed_on"
+    t.index ["vehicle_id"], name: "index_service_records_on_vehicle_id"
+  end
+
   create_table "sessions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "ip_address"
@@ -59,6 +121,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_11_225655) do
     t.bigint "account_id", null: false
     t.datetime "created_at", null: false
     t.string "email_address", null: false
+    t.boolean "notify_by_email", default: true, null: false
+    t.boolean "notify_by_sms", default: false, null: false
     t.string "password_digest", null: false
     t.string "phone"
     t.integer "role", default: 0, null: false
@@ -86,10 +150,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_11_225655) do
     t.index ["account_id"], name: "index_vehicles_on_account_id"
   end
 
+  add_foreign_key "alerts", "accounts"
   add_foreign_key "assignments", "accounts"
   add_foreign_key "assignments", "drivers"
   add_foreign_key "assignments", "vehicles"
   add_foreign_key "drivers", "accounts"
+  add_foreign_key "maintenance_schedules", "accounts"
+  add_foreign_key "maintenance_schedules", "vehicles"
+  add_foreign_key "renewals", "accounts"
+  add_foreign_key "renewals", "vehicles"
+  add_foreign_key "service_records", "accounts"
+  add_foreign_key "service_records", "vehicles"
   add_foreign_key "sessions", "users"
   add_foreign_key "users", "accounts"
   add_foreign_key "vehicles", "accounts"

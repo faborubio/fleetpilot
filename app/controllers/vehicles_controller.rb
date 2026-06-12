@@ -10,6 +10,9 @@ class VehiclesController < ApplicationController
 
   def show
     @assignments = @vehicle.assignments.includes(:driver).order(started_on: :desc)
+    @service_records = @vehicle.service_records.recent_first.limit(20)
+    @maintenance_schedules = @vehicle.maintenance_schedules.order(:category)
+    @renewals = @vehicle.renewals.order(:expires_on)
   end
 
   def new

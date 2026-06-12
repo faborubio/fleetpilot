@@ -1,0 +1,10 @@
+FleetPilot alerts
+=================
+
+Hi <%= @user.email_address %>, the following items in your fleet need attention:
+
+<% @alerts.each do |alert| -%>
+- [<%= alert.severity.upcase %>] <%= alert.message %>
+<% end -%>
+
+Review all alerts: <%= alerts_url %>
